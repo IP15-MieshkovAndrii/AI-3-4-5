@@ -318,28 +318,23 @@ def betterEvaluationFunction(currentGameState: GameState) -> float:
   capsules = currentGameState.getCapsules()
   score = currentGameState.getScore()
 
-  # Initialize the evaluation score
   evaluationScore = score
 
-  # Calculate the Manhattan distance to the closest food
   foodDistances = [manhattanDistance(pacmanPos, foodPos) for foodPos in food.asList()]
   if foodDistances:
       closestFoodDistance = min(foodDistances)
-      evaluationScore += 1.0 / closestFoodDistance  # Inverse of the distance to the closest food
+      evaluationScore += 1.0 / closestFoodDistance
 
-  # Calculate the Manhattan distance to the closest ghost
   ghostDistances = [manhattanDistance(pacmanPos, ghostState.getPosition()) for ghostState in ghostStates]
   for ghostState, ghostDistance in zip(ghostStates, ghostDistances):
       if ghostState.scaredTimer > 0:
-          evaluationScore += 200.0 / ghostDistance  # Chase scared ghosts
+          evaluationScore += 200.0 / ghostDistance
       else:
           if ghostDistance > 0:
-              evaluationScore -= 2.0 / ghostDistance  # Avoid active ghosts
+              evaluationScore -= 2.0 / ghostDistance
 
-  # Consider the number of remaining capsules
   evaluationScore -= 20.0 * len(capsules)
 
-  # Consider the number of remaining food pellets
   evaluationScore -= 4.0 * len(food.asList())
 
   return evaluationScore
